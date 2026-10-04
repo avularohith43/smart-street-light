@@ -1,0 +1,385 @@
+/* =============================================================
+   Smart Street Light System - LIGHT THEME
+   Colors:
+     Green  = ON / active      Red    = OFF
+     Blue   = DAY              Amber  = NIGHT
+     Purple = MOTION DETECTED  Teal   = AUTO
+   ============================================================= */
+
+:root {
+    --bg-top: #eef4ff;
+    --bg-bottom: #f8fafc;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-soft: #475569;
+    --text-muted: #94a3b8;
+
+    --green: #16a34a;
+    --green-soft: #dcfce7;
+    --red: #e11d48;
+    --red-soft: #ffe4e6;
+    --blue: #2563eb;
+    --blue-soft: #dbeafe;
+    --amber: #d97706;
+    --amber-soft: #fef3c7;
+    --purple: #7c3aed;
+    --purple-soft: #ede9fe;
+    --teal: #0d9488;
+    --teal-soft: #ccfbf1;
+    --gray: #64748b;
+    --gray-soft: #f1f5f9;
+
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 10px 30px -12px rgba(30, 64, 175, 0.18), 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", "Inter", Tahoma, Arial, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+        radial-gradient(900px 400px at 10% -10%, #dbe9ff 0%, transparent 60%),
+        radial-gradient(700px 400px at 100% 0%, #fef3c7 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+    background-attachment: fixed;
+}
+
+/* ---------- Header ---------- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px 32px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header h1 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    background: linear-gradient(90deg, #1d4ed8, #7c3aed);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-soft);
+    font-size: 0.88rem;
+    margin-top: 4px;
+}
+
+.connection {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--gray-soft);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-soft);
+}
+
+.connection .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gray);
+}
+
+.connection.online {
+    background: var(--green-soft);
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.connection.online .dot {
+    background: var(--green);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.18);
+    animation: pulse 2s infinite;
+}
+
+.connection.offline {
+    background: var(--red-soft);
+    border-color: #fecdd3;
+    color: #9f1239;
+}
+
+.connection.offline .dot {
+    background: var(--red);
+}
+
+@keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.45); }
+    70%  { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+/* ---------- Layout ---------- */
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 16px;
+    flex: 1;
+}
+
+/* ---------- Status cards ---------- */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px 20px 24px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+/* Coloured accent bar at the top of each card */
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gray);
+    transition: background 0.3s;
+}
+
+.card h2 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+/* Round icon holder (tint changes with state below) */
+.icon,
+.bulb {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    border-radius: 50%;
+    background: var(--gray-soft);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* Card state colours (classes are set by JavaScript) */
+.card.state-day::before     { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.card.state-night::before   { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.card.state-motion::before  { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.card.state-nomotion::before{ background: linear-gradient(90deg, #94a3b8, #cbd5e1); }
+.card.state-on::before      { background: linear-gradient(90deg, #16a34a, #4ade80); }
+.card.state-off::before     { background: linear-gradient(90deg, #e11d48, #fb7185); }
+.card.state-auto::before    { background: linear-gradient(90deg, #0d9488, #2dd4bf); }
+.card.state-manual::before  { background: linear-gradient(90deg, #d97706, #fbbf24); }
+
+.card.state-day .icon      { background: var(--blue-soft); }
+.card.state-night .icon    { background: var(--amber-soft); }
+.card.state-motion .icon   { background: var(--purple-soft); box-shadow: 0 0 0 8px rgba(124, 58, 237, 0.08); }
+.card.state-nomotion .icon { background: var(--gray-soft); }
+.card.state-auto .icon     { background: var(--teal-soft); }
+.card.state-manual .icon   { background: var(--amber-soft); }
+
+/* ---------- Badges ---------- */
+.badge {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    letter-spacing: 0.6px;
+    color: var(--gray);
+    background: var(--gray-soft);
+    border: 1px solid var(--border);
+}
+
+.badge.state-day      { color: #1d4ed8; background: var(--blue-soft);   border-color: #bfdbfe; }
+.badge.state-night    { color: #b45309; background: var(--amber-soft);  border-color: #fde68a; }
+.badge.state-motion   { color: #6d28d9; background: var(--purple-soft); border-color: #ddd6fe; }
+.badge.state-nomotion { color: #475569; background: var(--gray-soft);   border-color: var(--border); }
+.badge.state-on       { color: #166534; background: var(--green-soft);  border-color: #bbf7d0; }
+.badge.state-off      { color: #9f1239; background: var(--red-soft);    border-color: #fecdd3; }
+.badge.state-auto     { color: #0f766e; background: var(--teal-soft);   border-color: #99f6e4; }
+.badge.state-manual   { color: #b45309; background: var(--amber-soft);  border-color: #fde68a; }
+
+/* ---------- Street light bulb ---------- */
+.bulb {
+    filter: grayscale(1) opacity(0.55);
+    background: var(--red-soft);
+}
+
+.bulb.on {
+    filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.95));
+    background: radial-gradient(circle, #fef9c3 0%, #fde68a 70%, #fcd34d 100%);
+    box-shadow: 0 0 0 8px rgba(250, 204, 21, 0.18), 0 0 40px rgba(250, 204, 21, 0.55);
+    animation: glow 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+}
+
+/* ---------- Message line ---------- */
+.message {
+    min-height: 24px;
+    margin: 20px 0 6px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.message.success { color: var(--green); }
+.message.error   { color: var(--red); }
+
+/* ---------- Panels ---------- */
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-top: 18px;
+    box-shadow: var(--shadow-md);
+}
+
+.panel-sim {
+    background: linear-gradient(180deg, #fffdf5, #ffffff);
+    border: 2px dashed #fcd34d;
+}
+
+.panel h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.panel h3 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    margin: 18px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.hint {
+    color: var(--text-soft);
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+/* ---------- Buttons ---------- */
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn {
+    --btn-color: var(--gray);
+    flex: 1 1 150px;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.93rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: #fff;
+    background: var(--btn-color);
+    cursor: pointer;
+    box-shadow: 0 4px 12px -4px rgba(15, 23, 42, 0.35);
+    opacity: 0.88;
+    transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px -6px rgba(15, 23, 42, 0.4);
+}
+
+.btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* The button for the currently selected state gets a coloured ring */
+.btn.active {
+    opacity: 1;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--btn-color);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+    filter: grayscale(0.5);
+}
+
+.btn-auto     { --btn-color: var(--teal); }
+.btn-manual   { --btn-color: var(--amber); }
+.btn-on       { --btn-color: var(--green); }
+.btn-off      { --btn-color: var(--red); }
+.btn-day      { --btn-color: var(--blue); }
+.btn-night    { --btn-color: var(--amber); }
+.btn-motion   { --btn-color: var(--purple); }
+.btn-nomotion { --btn-color: var(--gray); }
+
+/* ---------- Footer ---------- */
+.footer {
+    text-align: center;
+    padding: 18px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 600px) {
+    .header { padding: 14px 16px; }
+    .header h1 { font-size: 1.25rem; }
+    .container { padding: 18px 12px; }
+    .btn { flex: 1 1 100%; }
+}
